@@ -29,7 +29,6 @@
     align-items: center;
   }
 
-  /* HEADER */
   header {
     width: 100%;
     background: var(--fondo2);
@@ -51,7 +50,6 @@
   header h1 { font-size: 20px; font-weight: 700; letter-spacing: 2px; }
   header p { font-size: 12px; color: var(--texto2); margin-top: 2px; }
 
-  /* MAIN */
   main {
     width: 100%;
     max-width: 480px;
@@ -59,11 +57,9 @@
     flex: 1;
   }
 
-  /* SCREENS */
   .screen { display: none; }
   .screen.active { display: block; }
 
-  /* PANTALLA 1 — INGRESAR CÓDIGO */
   .screen-title {
     font-size: 22px;
     font-weight: 700;
@@ -131,7 +127,6 @@
 
   .btn-secondary:hover { border-color: var(--texto2); color: var(--texto); }
 
-  /* ERROR */
   .error-msg {
     background: rgba(230, 57, 70, 0.1);
     border: 1px solid rgba(230, 57, 70, 0.3);
@@ -143,7 +138,6 @@
     display: none;
   }
 
-  /* PANTALLA 2 — COMPROBANTE VALIDADO */
   .comprobante-card {
     background: var(--fondo2);
     border: 1px solid var(--borde);
@@ -193,7 +187,6 @@
     font-weight: 600;
   }
 
-  /* PANTALLA 3 — FORMULARIO DENUNCIA */
   .form-section { margin-bottom: 24px; }
 
   .form-label {
@@ -206,7 +199,7 @@
     display: block;
   }
 
-  .form-input, .form-textarea, .form-select {
+  .form-input, .form-textarea {
     width: 100%;
     background: var(--fondo2);
     border: 1px solid var(--borde);
@@ -219,13 +212,9 @@
     font-family: inherit;
   }
 
-  .form-input:focus, .form-textarea:focus, .form-select:focus {
-    border-color: var(--rojo);
-  }
-
+  .form-input:focus, .form-textarea:focus { border-color: var(--rojo); }
   .form-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
 
-  /* MAPA */
   #map {
     width: 100%;
     height: 220px;
@@ -244,7 +233,6 @@
     gap: 6px;
   }
 
-  /* ANONIMO TOGGLE */
   .anonimo-toggle {
     display: flex;
     align-items: center;
@@ -285,7 +273,6 @@
   .datos-personales { display: none; }
   .datos-personales.visible { display: block; }
 
-  /* PANTALLA 4 — ÉXITO */
   .success-screen {
     text-align: center;
     padding: 40px 20px;
@@ -316,7 +303,6 @@
     text-align: center;
   }
 
-  /* LOADING */
   .loading {
     display: none;
     text-align: center;
@@ -334,7 +320,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* DIVIDER */
   .divider {
     display: flex;
     align-items: center;
@@ -437,7 +422,6 @@
     <div class="screen-title">Completar denuncia</div>
     <div class="screen-subtitle">Toda la información es opcional. Puedes denunciar de forma completamente anónima.</div>
 
-    <!-- TOGGLE ANÓNIMO -->
     <div class="anonimo-toggle" onclick="toggleAnonimo()">
       <div class="toggle-switch on" id="toggle-sw">
         <div class="toggle-knob"></div>
@@ -448,7 +432,6 @@
       </div>
     </div>
 
-    <!-- DATOS PERSONALES (ocultos por defecto) -->
     <div class="datos-personales" id="datos-personales">
       <div class="form-section">
         <label class="form-label">Nombre (opcional)</label>
@@ -461,7 +444,6 @@
       <div class="divider">o continúa sin datos</div>
     </div>
 
-    <!-- UBICACIÓN -->
     <div class="form-section">
       <label class="form-label">¿Dónde ocurrió? (opcional)</label>
       <div id="map"></div>
@@ -471,7 +453,6 @@
       <input type="text" class="form-input" id="input-direccion" placeholder="O escribe la dirección aquí" style="margin-bottom: 8px;">
     </div>
 
-    <!-- QUÉ PASÓ -->
     <div class="form-section">
       <label class="form-label">¿Qué ocurrió? (opcional)</label>
       <textarea class="form-textarea" id="input-descripcion" placeholder="Describe brevemente lo que pasó..."></textarea>
@@ -500,7 +481,6 @@
 
 </main>
 
-<!-- Google Maps -->
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvWkWiC1fyXjosMtPoiuSaQkOy8XhniarxE2byegzvkD3Gkpn20Ueg9pY6S788zDtU/exec";
   const MAPS_API_KEY = "AIzaSyAATBpMjRYWrgRxVYkDlRFLqIS9C8O_VDM";
@@ -512,14 +492,23 @@
   let latSeleccionada = null, lngSeleccionada = null;
   let esAnonimo = true;
 
+  // Leer código desde URL si viene del QR
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const codigoQR = params.get('codigo');
+    if (codigoQR) {
+      document.getElementById('input-codigo').value = codigoQR;
+    }
+  };
+
   function mostrarPantalla(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
   }
 
   async function verificarCodigo() {
-    const codigo = document.getElementById('input-codigo').value.trim();
-    if (codigo.length !== 6) {
+    const codigo = document.getElementById('input-codigo').value.trim().padStart(6, '0');
+    if (codigo.replace(/\D/g,'').length !== 6) {
       document.getElementById('error-codigo').style.display = 'block';
       document.getElementById('error-codigo').textContent = 'El código debe tener 6 dígitos.';
       return;
@@ -613,7 +602,7 @@
     const descripcion = document.getElementById('input-descripcion').value;
     const direccion = document.getElementById('input-direccion').value;
 
-    const url = `${APPS_SCRIPT_URL}?accion=denuncia&codigo=${codigoActual}&nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&descripcion=${encodeURIComponent(descripcion)}&direccion=${encodeURIComponent(direccion)}&lat=${latSeleccionada||''}&lng=${lngSeleccionada||}`;
+    const url = `${APPS_SCRIPT_URL}?accion=denuncia&codigo=${codigoActual}&nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&descripcion=${encodeURIComponent(descripcion)}&direccion=${encodeURIComponent(direccion)}&lat=${latSeleccionada||''}&lng=${lngSeleccionada||''}`;
 
     try {
       await fetch(url);
