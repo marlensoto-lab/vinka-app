@@ -472,8 +472,8 @@
 
       if (reporte) {
         codigoActual = String(reporte[0]).padStart(6, '0');
-        fechaActual = formatearFecha(reporte[1]) || '—';
-        horaActual = formatearHora(reporte[2]) || '—';
+        fechaActual = reporte[1] || "—";
+        horaActual = reporte[2] || "—";
 
         document.getElementById('show-codigo').textContent = codigoActual;
         document.getElementById('show-fecha').textContent = fechaActual;
