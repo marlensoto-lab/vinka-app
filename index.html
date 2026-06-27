@@ -60,24 +60,10 @@
   .screen { display: none; }
   .screen.active { display: block; }
 
-  .screen-title {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
+  .screen-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .screen-subtitle { font-size: 14px; color: var(--texto2); margin-bottom: 32px; line-height: 1.5; }
 
-  .screen-subtitle {
-    font-size: 14px;
-    color: var(--texto2);
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-
-  .code-input-wrapper {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .code-input-wrapper { display: flex; gap: 8px; margin-bottom: 16px; }
 
   .code-input {
     flex: 1;
@@ -224,14 +210,7 @@
     overflow: hidden;
   }
 
-  .map-hint {
-    font-size: 12px;
-    color: var(--texto2);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .map-hint { font-size: 12px; color: var(--texto2); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
 
   .anonimo-toggle {
     display: flex;
@@ -273,10 +252,7 @@
   .datos-personales { display: none; }
   .datos-personales.visible { display: block; }
 
-  .success-screen {
-    text-align: center;
-    padding: 40px 20px;
-  }
+  .success-screen { text-align: center; padding: 40px 20px; }
 
   .success-icon {
     width: 80px; height: 80px;
@@ -303,11 +279,7 @@
     text-align: center;
   }
 
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 40px;
-  }
+  .loading { display: none; text-align: center; padding: 40px; }
 
   .spinner {
     width: 40px; height: 40px;
@@ -320,21 +292,8 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    color: var(--texto2);
-    font-size: 12px;
-  }
-
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--borde);
-  }
+  .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--texto2); font-size: 12px; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--borde); }
 </style>
 </head>
 <body>
@@ -349,28 +308,13 @@
 
 <main>
 
-  <!-- PANTALLA 1: INGRESAR CÓDIGO -->
   <div class="screen active" id="screen-codigo">
     <div class="screen-title">Ingresa tu código</div>
-    <div class="screen-subtitle">
-      Escribe el código de 6 dígitos que aparece en tu comprobante impreso para verificar y completar tu denuncia.
-    </div>
-
-    <div class="error-msg" id="error-codigo">
-      Código no encontrado. Verifica que los números sean correctos.
-    </div>
-
+    <div class="screen-subtitle">Escribe el código de 6 dígitos que aparece en tu comprobante impreso para verificar y completar tu denuncia.</div>
+    <div class="error-msg" id="error-codigo">Código no encontrado. Verifica que los números sean correctos.</div>
     <div class="code-input-wrapper">
-      <input
-        type="number"
-        class="code-input"
-        id="input-codigo"
-        placeholder="000000"
-        maxlength="6"
-        oninput="if(this.value.length>6) this.value=this.value.slice(0,6)"
-      />
+      <input type="number" class="code-input" id="input-codigo" placeholder="000000" maxlength="6" oninput="if(this.value.length>6) this.value=this.value.slice(0,6)"/>
     </div>
-
     <button class="btn-primary" onclick="verificarCodigo()">Verificar código</button>
     <div class="loading" id="loading-verificar">
       <div class="spinner"></div>
@@ -378,11 +322,9 @@
     </div>
   </div>
 
-  <!-- PANTALLA 2: COMPROBANTE VALIDADO -->
   <div class="screen" id="screen-comprobante">
     <div class="screen-title">Comprobante verificado ✓</div>
     <div class="screen-subtitle">Tu reporte fue recibido. Ahora puedes completar los detalles de forma opcional.</div>
-
     <div class="comprobante-card">
       <div class="comprobante-header">
         <div class="check-icon">✓</div>
@@ -412,26 +354,20 @@
         <span class="badge-recibida">RECIBIDA</span>
       </div>
     </div>
-
     <button class="btn-primary" onclick="irAFormulario()">Completar mi denuncia</button>
     <button class="btn-secondary" onclick="resetear()">Volver al inicio</button>
   </div>
 
-  <!-- PANTALLA 3: FORMULARIO -->
   <div class="screen" id="screen-formulario">
     <div class="screen-title">Completar denuncia</div>
     <div class="screen-subtitle">Toda la información es opcional. Puedes denunciar de forma completamente anónima.</div>
-
     <div class="anonimo-toggle" onclick="toggleAnonimo()">
-      <div class="toggle-switch on" id="toggle-sw">
-        <div class="toggle-knob"></div>
-      </div>
+      <div class="toggle-switch on" id="toggle-sw"><div class="toggle-knob"></div></div>
       <div class="toggle-text">
         <h3>Denuncia anónima</h3>
         <p>Tus datos personales no serán guardados</p>
       </div>
     </div>
-
     <div class="datos-personales" id="datos-personales">
       <div class="form-section">
         <label class="form-label">Nombre (opcional)</label>
@@ -443,21 +379,16 @@
       </div>
       <div class="divider">o continúa sin datos</div>
     </div>
-
     <div class="form-section">
       <label class="form-label">¿Dónde ocurrió? (opcional)</label>
       <div id="map"></div>
-      <div class="map-hint">
-        📍 Toca el mapa para marcar el lugar del incidente
-      </div>
+      <div class="map-hint">📍 Toca el mapa para marcar el lugar del incidente</div>
       <input type="text" class="form-input" id="input-direccion" placeholder="O escribe la dirección aquí" style="margin-bottom: 8px;">
     </div>
-
     <div class="form-section">
       <label class="form-label">¿Qué ocurrió? (opcional)</label>
       <textarea class="form-textarea" id="input-descripcion" placeholder="Describe brevemente lo que pasó..."></textarea>
     </div>
-
     <button class="btn-primary" onclick="enviarDenuncia()">Enviar denuncia</button>
     <div class="loading" id="loading-enviar">
       <div class="spinner"></div>
@@ -466,7 +397,6 @@
     <button class="btn-secondary" onclick="irAComprobante()">Volver</button>
   </div>
 
-  <!-- PANTALLA 4: ÉXITO -->
   <div class="screen" id="screen-exito">
     <div class="success-screen">
       <div class="success-icon">✓</div>
@@ -482,23 +412,40 @@
 </main>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6neFBlf6lcdVXXqsfV3nbeYerIakmxlR4yl3HvwcUuXR1ZMDZWTq7Scqq4qaBdkb4/exec";
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyjbRgi8_ilfBosyD1pNxgcwdHh_0QMTPzwnS17SI1HjJsyKHFNGXnI_U1VaEbCmhJu/exec";
   const MAPS_API_KEY = "AIzaSyAATBpMjRYWrgRxVYkDlRFLqIS9C8O_VDM";
 
-  let codigoActual = "";
-  let fechaActual = "";
-  let horaActual = "";
+  let codigoActual = "", fechaActual = "", horaActual = "";
   let map, marker;
   let latSeleccionada = null, lngSeleccionada = null;
   let esAnonimo = true;
 
-  // Leer código desde URL si viene del QR
+  function formatearFecha(str) {
+    try {
+      var d = new Date(str);
+      if (isNaN(d)) return str;
+      var dia = String(d.getDate()).padStart(2,'0');
+      var mes = String(d.getMonth()+1).padStart(2,'0');
+      var anio = d.getFullYear();
+      return dia + '/' + mes + '/' + anio;
+    } catch(e) { return str; }
+  }
+
+  function formatearHora(str) {
+    try {
+      var d = new Date(str);
+      if (isNaN(d)) return str;
+      var h = String(d.getHours()).padStart(2,'0');
+      var m = String(d.getMinutes()).padStart(2,'0');
+      var s = String(d.getSeconds()).padStart(2,'0');
+      return h + ':' + m + ':' + s;
+    } catch(e) { return str; }
+  }
+
   window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const codigoQR = params.get('codigo');
-    if (codigoQR) {
-      document.getElementById('input-codigo').value = codigoQR;
-    }
+    if (codigoQR) document.getElementById('input-codigo').value = codigoQR;
   };
 
   function mostrarPantalla(id) {
@@ -521,13 +468,12 @@
     try {
       const res = await fetch(APPS_SCRIPT_URL);
       const data = await res.json();
-
       const reporte = data.find(r => String(r[0]).padStart(6, '0') === codigo);
 
       if (reporte) {
         codigoActual = String(reporte[0]).padStart(6, '0');
-        fechaActual = reporte[1] || '—';
-        horaActual = reporte[2] || '—';
+        fechaActual = reporte[1] || "—";
+        horaActual = reporte[2] || "—";
 
         document.getElementById('show-codigo').textContent = codigoActual;
         document.getElementById('show-fecha').textContent = fechaActual;
@@ -553,24 +499,19 @@
     setTimeout(initMap, 300);
   }
 
-  function irAComprobante() {
-    mostrarPantalla('screen-comprobante');
-  }
+  function irAComprobante() { mostrarPantalla('screen-comprobante'); }
 
   function toggleAnonimo() {
     esAnonimo = !esAnonimo;
-    const sw = document.getElementById('toggle-sw');
-    const dp = document.getElementById('datos-personales');
-    sw.classList.toggle('on', esAnonimo);
-    dp.classList.toggle('visible', !esAnonimo);
+    document.getElementById('toggle-sw').classList.toggle('on', esAnonimo);
+    document.getElementById('datos-personales').classList.toggle('visible', !esAnonimo);
   }
 
   function initMap() {
     if (map) return;
     const centro = { lat: -33.4569, lng: -70.6483 };
     map = new google.maps.Map(document.getElementById('map'), {
-      center: centro,
-      zoom: 13,
+      center: centro, zoom: 13,
       styles: [
         { elementType: 'geometry', stylers: [{ color: '#1e2428' }] },
         { elementType: 'labels.text.fill', stylers: [{ color: '#8b949e' }] },
@@ -579,14 +520,12 @@
         { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1926' }] },
       ]
     });
-
     map.addListener('click', function(e) {
       latSeleccionada = e.latLng.lat();
       lngSeleccionada = e.latLng.lng();
       if (marker) marker.setMap(null);
       marker = new google.maps.Marker({
-        position: e.latLng,
-        map: map,
+        position: e.latLng, map: map,
         icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#E63946', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
       });
       document.getElementById('input-direccion').value = `${latSeleccionada.toFixed(5)}, ${lngSeleccionada.toFixed(5)}`;
@@ -604,23 +543,16 @@
 
     const url = `${APPS_SCRIPT_URL}?accion=denuncia&codigo=${codigoActual}&nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&descripcion=${encodeURIComponent(descripcion)}&direccion=${encodeURIComponent(direccion)}&lat=${latSeleccionada||''}&lng=${lngSeleccionada||''}`;
 
-    try {
-      await fetch(url);
-    } catch(e) {}
+    try { await fetch(url); } catch(e) {}
 
     document.getElementById('loading-enviar').style.display = 'none';
     mostrarPantalla('screen-exito');
   }
 
   function resetear() {
-    codigoActual = '';
-    fechaActual = '';
-    horaActual = '';
-    latSeleccionada = null;
-    lngSeleccionada = null;
-    map = null;
-    marker = null;
-    esAnonimo = true;
+    codigoActual = ''; fechaActual = ''; horaActual = '';
+    latSeleccionada = null; lngSeleccionada = null;
+    map = null; marker = null; esAnonimo = true;
     document.getElementById('input-codigo').value = '';
     document.getElementById('error-codigo').style.display = 'none';
     document.getElementById('toggle-sw').classList.add('on');
