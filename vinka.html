@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VINKA — Reporte Ciudadano</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rojo: #E63946;
+    --verde: #1D9E75;
+    --fondo: #0D1117;
+    --fondo2: #161B22;
+    --fondo3: #21262D;
+    --borde: #30363D;
+    --texto: #E6EDF3;
+    --texto2: #8B949E;
+    --blanco: #FFFFFF;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    width: 100%;
+    background: var(--fondo2);
+    border-bottom: 1px solid var(--borde);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-circle {
+    width: 36px; height: 36px;
+    background: var(--rojo);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: white;
+  }
+
+  header h1 { font-size: 20px; font-weight: 700; letter-spacing: 2px; }
+  header p { font-size: 12px; color: var(--texto2); margin-top: 2px; }
+
+  main {
+    width: 100%;
+    max-width: 480px;
+    padding: 32px 20px;
+    flex: 1;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .screen-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .screen-subtitle {
+    font-size: 14px;
+    color: var(--texto2);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .code-input-wrapper {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .code-input {
+    flex: 1;
+    background: var(--fondo2);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--texto);
+    letter-spacing: 8px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .code-input:focus { border-color: var(--rojo); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--rojo);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    width: 100%;
+    background: transparent;
+    color: var(--texto2);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--texto2); color: var(--texto); }
+
+  .error-msg {
+    background: rgba(230, 57, 70, 0.1);
+    border: 1px solid rgba(230, 57, 70, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--rojo);
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .comprobante-card {
+    background: var(--fondo2);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .comprobante-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .check-icon {
+    width: 40px; height: 40px;
+    background: rgba(29, 158, 117, 0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  .comprobante-header h2 { font-size: 16px; font-weight: 600; }
+  .comprobante-header p { font-size: 12px; color: var(--texto2); margin-top: 2px; }
+
+  .dato-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .dato-row:last-child { border-bottom: none; }
+  .dato-label { font-size: 13px; color: var(--texto2); }
+  .dato-valor { font-size: 13px; font-weight: 600; }
+
+  .badge-recibida {
+    background: rgba(29, 158, 117, 0.15);
+    color: var(--verde);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .form-section { margin-bottom: 24px; }
+
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .form-input, .form-textarea {
+    width: 100%;
+    background: var(--fondo2);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--texto);
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+
+  .form-input:focus, .form-textarea:focus { border-color: var(--rojo); }
+  .form-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+
+  #map {
+    width: 100%;
+    height: 220px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .map-hint {
+    font-size: 12px;
+    color: var(--texto2);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .anonimo-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--fondo2);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  .toggle-switch {
+    width: 44px; height: 24px;
+    background: var(--borde);
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch.on { background: var(--verde); }
+
+  .toggle-knob {
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px; left: 3px;
+    transition: left 0.2s;
+  }
+
+  .toggle-switch.on .toggle-knob { left: 23px; }
+
+  .toggle-text h3 { font-size: 14px; font-weight: 600; }
+  .toggle-text p { font-size: 12px; color: var(--texto2); margin-top: 2px; }
+
+  .datos-personales { display: none; }
+  .datos-personales.visible { display: block; }
+
+  .success-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    background: rgba(29, 158, 117, 0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 24px;
+  }
+
+  .success-screen h2 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .success-screen p { font-size: 14px; color: var(--texto2); line-height: 1.6; margin-bottom: 8px; }
+
+  .codigo-destacado {
+    background: var(--fondo2);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 24px 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--verde);
+    text-align: center;
+  }
+
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--borde);
+    border-top-color: var(--rojo);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--texto2);
+    font-size: 12px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--borde);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-circle">V</div>
+  <div>
+    <h1>VINKA</h1>
+    <p>Reporte Ciudadano Seguro</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- PANTALLA 1: INGRESAR CÓDIGO -->
+  <div class="screen active" id="screen-codigo">
+    <div class="screen-title">Ingresa tu código</div>
+    <div class="screen-subtitle">
+      Escribe el código de 6 dígitos que aparece en tu comprobante impreso para verificar y completar tu denuncia.
+    </div>
+
+    <div class="error-msg" id="error-codigo">
+      Código no encontrado. Verifica que los números sean correctos.
+    </div>
+
+    <div class="code-input-wrapper">
+      <input
+        type="number"
+        class="code-input"
+        id="input-codigo"
+        placeholder="000000"
+        maxlength="6"
+        oninput="if(this.value.length>6) this.value=this.value.slice(0,6)"
+      />
+    </div>
+
+    <button class="btn-primary" onclick="verificarCodigo()">Verificar código</button>
+    <div class="loading" id="loading-verificar">
+      <div class="spinner"></div>
+      <p style="color: var(--texto2); font-size: 14px;">Verificando...</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA 2: COMPROBANTE VALIDADO -->
+  <div class="screen" id="screen-comprobante">
+    <div class="screen-title">Comprobante verificado ✓</div>
+    <div class="screen-subtitle">Tu reporte fue recibido. Ahora puedes completar los detalles de forma opcional.</div>
+
+    <div class="comprobante-card">
+      <div class="comprobante-header">
+        <div class="check-icon">✓</div>
+        <div>
+          <h2>Reporte recibido</h2>
+          <p>Comprobante válido</p>
+        </div>
+      </div>
+      <div class="dato-row">
+        <span class="dato-label">Código</span>
+        <span class="dato-valor" id="show-codigo">—</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-label">Tipo</span>
+        <span class="dato-valor">Robo por sorpresa</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-label">Fecha</span>
+        <span class="dato-valor" id="show-fecha">—</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-label">Hora</span>
+        <span class="dato-valor" id="show-hora">—</span>
+      </div>
+      <div class="dato-row">
+        <span class="dato-label">Estado</span>
+        <span class="badge-recibida">RECIBIDA</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="irAFormulario()">Completar mi denuncia</button>
+    <button class="btn-secondary" onclick="resetear()">Volver al inicio</button>
+  </div>
+
+  <!-- PANTALLA 3: FORMULARIO -->
+  <div class="screen" id="screen-formulario">
+    <div class="screen-title">Completar denuncia</div>
+    <div class="screen-subtitle">Toda la información es opcional. Puedes denunciar de forma completamente anónima.</div>
+
+    <div class="anonimo-toggle" onclick="toggleAnonimo()">
+      <div class="toggle-switch on" id="toggle-sw">
+        <div class="toggle-knob"></div>
+      </div>
+      <div class="toggle-text">
+        <h3>Denuncia anónima</h3>
+        <p>Tus datos personales no serán guardados</p>
+      </div>
+    </div>
+
+    <div class="datos-personales" id="datos-personales">
+      <div class="form-section">
+        <label class="form-label">Nombre (opcional)</label>
+        <input type="text" class="form-input" id="input-nombre" placeholder="Tu nombre">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Teléfono (opcional)</label>
+        <input type="tel" class="form-input" id="input-telefono" placeholder="+56 9 XXXX XXXX">
+      </div>
+      <div class="divider">o continúa sin datos</div>
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">¿Dónde ocurrió? (opcional)</label>
+      <div id="map"></div>
+      <div class="map-hint">
+        📍 Toca el mapa para marcar el lugar del incidente
+      </div>
+      <input type="text" class="form-input" id="input-direccion" placeholder="O escribe la dirección aquí" style="margin-bottom: 8px;">
+    </div>
+
+    <div class="form-section">
+      <label class="form-label">¿Qué ocurrió? (opcional)</label>
+      <textarea class="form-textarea" id="input-descripcion" placeholder="Describe brevemente lo que pasó..."></textarea>
+    </div>
+
+    <button class="btn-primary" onclick="enviarDenuncia()">Enviar denuncia</button>
+    <div class="loading" id="loading-enviar">
+      <div class="spinner"></div>
+      <p style="color: var(--texto2); font-size: 14px;">Enviando denuncia...</p>
+    </div>
+    <button class="btn-secondary" onclick="irAComprobante()">Volver</button>
+  </div>
+
+  <!-- PANTALLA 4: ÉXITO -->
+  <div class="screen" id="screen-exito">
+    <div class="success-screen">
+      <div class="success-icon">✓</div>
+      <h2>Denuncia enviada</h2>
+      <p>Tu reporte ha sido registrado exitosamente.</p>
+      <p>Gracias por ayudar a construir comunidades más seguras.</p>
+      <div class="codigo-destacado" id="show-codigo-final">—</div>
+      <p style="font-size: 12px;">Guarda este código como respaldo de tu denuncia.</p>
+      <button class="btn-primary" onclick="resetear()" style="margin-top: 32px;">Nueva denuncia</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6neFBlf6lcdVXXqsfV3nbeYerIakmxlR4yl3HvwcUuXR1ZMDZWTq7Scqq4qaBdkb4/exec";
+  const MAPS_API_KEY = "AIzaSyAATBpMjRYWrgRxVYkDlRFLqIS9C8O_VDM";
+
+  let codigoActual = "";
+  let fechaActual = "";
+  let horaActual = "";
+  let map, marker;
+  let latSeleccionada = null, lngSeleccionada = null;
+  let esAnonimo = true;
+
+  // Leer código desde URL si viene del QR
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const codigoQR = params.get('codigo');
+    if (codigoQR) {
+      document.getElementById('input-codigo').value = codigoQR;
+    }
+  };
+
+  function mostrarPantalla(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  async function verificarCodigo() {
+    const codigo = document.getElementById('input-codigo').value.trim().padStart(6, '0');
+    if (codigo.replace(/\D/g,'').length !== 6) {
+      document.getElementById('error-codigo').style.display = 'block';
+      document.getElementById('error-codigo').textContent = 'El código debe tener 6 dígitos.';
+      return;
+    }
+
+    document.getElementById('error-codigo').style.display = 'none';
+    document.getElementById('loading-verificar').style.display = 'block';
+    document.querySelector('#screen-codigo .btn-primary').style.display = 'none';
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      const data = await res.json();
+
+      const reporte = data.find(r => String(r[0]).padStart(6, '0') === codigo);
+
+      if (reporte) {
+        codigoActual = String(reporte[0]).padStart(6, '0');
+        fechaActual = reporte[1] || '—';
+        horaActual = reporte[2] || '—';
+
+        document.getElementById('show-codigo').textContent = codigoActual;
+        document.getElementById('show-fecha').textContent = fechaActual;
+        document.getElementById('show-hora').textContent = horaActual;
+        document.getElementById('show-codigo-final').textContent = codigoActual;
+
+        mostrarPantalla('screen-comprobante');
+      } else {
+        document.getElementById('error-codigo').style.display = 'block';
+        document.getElementById('error-codigo').textContent = 'Código no encontrado. Verifica que los números sean correctos.';
+      }
+    } catch(e) {
+      document.getElementById('error-codigo').style.display = 'block';
+      document.getElementById('error-codigo').textContent = 'Error al conectar. Intenta de nuevo.';
+    }
+
+    document.getElementById('loading-verificar').style.display = 'none';
+    document.querySelector('#screen-codigo .btn-primary').style.display = 'block';
+  }
+
+  function irAFormulario() {
+    mostrarPantalla('screen-formulario');
+    setTimeout(initMap, 300);
+  }
+
+  function irAComprobante() {
+    mostrarPantalla('screen-comprobante');
+  }
+
+  function toggleAnonimo() {
+    esAnonimo = !esAnonimo;
+    const sw = document.getElementById('toggle-sw');
+    const dp = document.getElementById('datos-personales');
+    sw.classList.toggle('on', esAnonimo);
+    dp.classList.toggle('visible', !esAnonimo);
+  }
+
+  function initMap() {
+    if (map) return;
+    const centro = { lat: -33.4569, lng: -70.6483 };
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: centro,
+      zoom: 13,
+      styles: [
+        { elementType: 'geometry', stylers: [{ color: '#1e2428' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#8b949e' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#0d1117' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#30363d' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1926' }] },
+      ]
+    });
+
+    map.addListener('click', function(e) {
+      latSeleccionada = e.latLng.lat();
+      lngSeleccionada = e.latLng.lng();
+      if (marker) marker.setMap(null);
+      marker = new google.maps.Marker({
+        position: e.latLng,
+        map: map,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#E63946', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 }
+      });
+      document.getElementById('input-direccion').value = `${latSeleccionada.toFixed(5)}, ${lngSeleccionada.toFixed(5)}`;
+    });
+  }
+
+  async function enviarDenuncia() {
+    document.getElementById('loading-enviar').style.display = 'block';
+    document.querySelector('#screen-formulario .btn-primary').style.display = 'none';
+
+    const nombre = esAnonimo ? 'Anónimo' : (document.getElementById('input-nombre').value || 'Anónimo');
+    const telefono = esAnonimo ? '' : document.getElementById('input-telefono').value;
+    const descripcion = document.getElementById('input-descripcion').value;
+    const direccion = document.getElementById('input-direccion').value;
+
+    const url = `${APPS_SCRIPT_URL}?accion=denuncia&codigo=${codigoActual}&nombre=${encodeURIComponent(nombre)}&telefono=${encodeURIComponent(telefono)}&descripcion=${encodeURIComponent(descripcion)}&direccion=${encodeURIComponent(direccion)}&lat=${latSeleccionada||''}&lng=${lngSeleccionada||''}`;
+
+    try {
+      await fetch(url);
+    } catch(e) {}
+
+    document.getElementById('loading-enviar').style.display = 'none';
+    mostrarPantalla('screen-exito');
+  }
+
+  function resetear() {
+    codigoActual = '';
+    fechaActual = '';
+    horaActual = '';
+    latSeleccionada = null;
+    lngSeleccionada = null;
+    map = null;
+    marker = null;
+    esAnonimo = true;
+    document.getElementById('input-codigo').value = '';
+    document.getElementById('error-codigo').style.display = 'none';
+    document.getElementById('toggle-sw').classList.add('on');
+    document.getElementById('datos-personales').classList.remove('visible');
+    mostrarPantalla('screen-codigo');
+  }
+
+  document.getElementById('input-codigo').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') verificarCodigo();
+  });
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAATBpMjRYWrgRxVYkDlRFLqIS9C8O_VDM&callback=Function.prototype" async defer></script>
+
+</body>
+</html>
